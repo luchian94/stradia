@@ -3,19 +3,18 @@ import 'dart:async';
 import 'package:location/location.dart';
 
 class CaptureService {
-  final _captureController = StreamController<String>();
-  Stream<String> get captureStream => _captureController.stream;
-
   List<String> _failedCaptures = [];
 
-  CaptureService() {
-    captureStream.listen((event) async {
-      _sendCapture();
-    });
+  int _totalCaptures = 0;
+
+  int get totalCaptures => _totalCaptures;
+
+  capture(String? sessionId, String base64Image) async {
+    _totalCaptures++;
   }
 
-  capture(String? sessionId, String image) {
-    _captureController.add(image);
+  reset() {
+    _totalCaptures = 0;
   }
 
   Future<void> _sendCapture() async {
@@ -49,9 +48,5 @@ class CaptureService {
 
     _locationData = await location.getLocation();
     return _locationData;
-  }
-
-  void dispose() {
-    _captureController.close();
   }
 }

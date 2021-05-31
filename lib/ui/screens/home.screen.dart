@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stradia/ui/screens/home.model.dart';
+import 'package:stradia/ui/screens/home.summary.dart';
 
 import 'home.camera.preview.dart';
 import 'home.controls.dart';
@@ -32,15 +33,15 @@ class HomeScreen extends StatelessWidget {
             builder: (context, model, child) {
               return Center(
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     HomeControls(),
+                    HomeSummary(),
                     CameraHomePreview()
                   ],
                 ),
               );
             },
-            onModelReady: (viewModel) => viewModel.setupCamera(),
             viewModelBuilder: () => HomeModel()),
       ),
     );

@@ -8,13 +8,16 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
 
   @override
   Widget build(BuildContext context, HomeModel model) {
-    if (!model.cameraReady) {
+    if(model.captureStatus == CaptureStatus.Idle) {
+      return Container();
+    }
+    if (model.isBusy) {
       return CircularProgressIndicator();
     }
     return Column(
       children: [
         Text(
-          "Anteprima",
+          "Posiziona la camera sulla strada",
           style: Theme.of(context).textTheme.headline5,
         ),
         Container(
