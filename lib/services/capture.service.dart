@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:location/location.dart';
+import 'package:stradia/models/capture.model.dart';
 
 class CaptureService {
   List<String> _failedCaptures = [];
@@ -11,6 +12,16 @@ class CaptureService {
 
   capture(String? sessionId, String base64Image) async {
     _totalCaptures++;
+
+    Capture capture = Capture(
+      "1",
+      sessionId != null ? sessionId : "",
+      0.0,
+      0.0,
+      0.0,
+      "2020",
+      base64Image,
+    );
   }
 
   reset() {

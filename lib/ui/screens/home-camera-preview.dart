@@ -11,9 +11,6 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
     if(model.captureStatus == CaptureStatus.Idle) {
       return Container();
     }
-    if (model.isBusy) {
-      return CircularProgressIndicator();
-    }
     return Column(
       children: [
         Text(

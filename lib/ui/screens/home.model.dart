@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:camera/camera.dart';
+import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stradia/locator.dart';
 import 'package:stradia/services/capture.service.dart';
@@ -23,8 +24,14 @@ class HomeModel extends BaseViewModel {
   Timer? _captureTimer;
   bool showSummary = false;
 
-  get isCapturing => captureStatus == CaptureStatus.Capturing;
-  get capturedImages => _captureService.totalCaptures;
+  bool? gpServiceEnabled;
+  PermissionStatus? gpsPermissionStatus;
+
+  int get capturedImages => _captureService.totalCaptures;
+  bool get isCapturing => captureStatus == CaptureStatus.Capturing;
+  bool get isSettingUp => captureStatus == CaptureStatus.Setup;
+  bool get hasGpsPermission => gpsPermissionStatus == PermissionStatus.granted;
+  bool get canGetLocation => gpServiceEnabled == true && hasGpsPermission;
 
   Future<void> setupCamera() async {
     final cameras = await availableCameras();
@@ -43,6 +50,7 @@ class HomeModel extends BaseViewModel {
     showSummary = false;
     captureStatus = CaptureStatus.Setup;
     setBusy(true);
+    await checkGpsServiceAndPermission();
     await setupCamera();
     setBusy(false);
   }
@@ -65,6 +73,20 @@ class HomeModel extends BaseViewModel {
     showSummary = true;
     _sessionId = null;
     notifyListeners();
+  }
+
+  Future<void> checkGpsServiceAndPermission() async {
+    Location location = new Location();
+
+    gpServiceEnabled = await location.serviceEnabled();
+    if (gpServiceEnabled == false) {
+      gpServiceEnabled = await location.requestService();
+    }
+
+    gpsPermissionStatus = await location.hasPermission();
+    if (gpsPermissionStatus == PermissionStatus.denied) {
+      gpsPermissionStatus = await location.requestPermission();
+    }
   }
 
   void _takePictureAndSend() async {

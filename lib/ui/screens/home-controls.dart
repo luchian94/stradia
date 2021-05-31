@@ -7,7 +7,7 @@ class HomeControls extends ViewModelWidget<HomeModel> {
   HomeControls({Key? key}) : super(key: key);
 
   Widget getButton(HomeModel model) {
-    switch(model.captureStatus) {
+    switch (model.captureStatus) {
       case CaptureStatus.Capturing:
         return ElevatedButton(
           key: ValueKey("STOP BUTTON"),
@@ -25,7 +25,7 @@ class HomeControls extends ViewModelWidget<HomeModel> {
       case CaptureStatus.Setup:
         return ElevatedButton(
           key: ValueKey("START BUTTON"),
-          onPressed: () => model.startSession(),
+          onPressed: model.canGetLocation ? () => model.startSession() : null,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
