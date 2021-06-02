@@ -1,37 +1,51 @@
 import 'dart:async';
 
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:stradia/constants/constants.dart';
 import 'package:stradia/models/capture.model.dart';
+import 'package:http/http.dart' as http;
+import 'package:stradia/utils/image-utils.dart';
 
 class CaptureService {
-  List<String> _failedCaptures = [];
+  String _baseApiUrl = Constants.baseApiUrl;
+
+  List<Capture> _failedCaptures = [];
 
   int _totalCaptures = 0;
 
   int get totalCaptures => _totalCaptures;
 
-  capture(String? sessionId, String base64Image) async {
-    _totalCaptures++;
+  capture(String? sessionId, String imagePath) async {
+    DateTime now = DateTime.now();
+    String currentFormattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(now);
+
+    var location = await _getCurrentLocation();
+    String base64Image = await ImageProcessor.cropSquare(imagePath);
 
     Capture capture = Capture(
-      "1",
+      "test",
       sessionId != null ? sessionId : "",
-      0.0,
-      0.0,
-      0.0,
-      "2020",
+      location != null ? location.latitude : 0.0,
+      location != null ? location.longitude : 0.0,
+      location != null ? location.heading : 0.0,
+      currentFormattedDate,
       base64Image,
     );
+
+    try {
+      var url = Uri.parse('$_baseApiUrl/api/v1/image');
+      var response = await http.post(url, body: capture.toJson());
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      _totalCaptures++;
+    } catch (e) {
+      _failedCaptures.add(capture);
+    }
   }
 
   reset() {
     _totalCaptures = 0;
-  }
-
-  Future<void> _sendCapture() async {
-    var location = await _getCurrentLocation();
-    print(location!.longitude.toString());
-    print(location.latitude.toString());
   }
 
   Future<LocationData?> _getCurrentLocation() async {

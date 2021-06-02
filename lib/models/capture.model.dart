@@ -1,9 +1,9 @@
 class Capture {
   final String deviceId;
   final String tripId;
-  final double latitude;
-  final double longitude;
-  final double heading;
+  final double? latitude;
+  final double? longitude;
+  final double? heading;
   final String date;
   final String image;
 
@@ -29,9 +29,10 @@ class Capture {
   Map<String, dynamic> toJson() => {
         'deviceId': deviceId,
         'tripId': tripId,
-        'latitude': latitude,
-        'longitude': longitude,
+        'latitude': latitude.toString(),
+        'longitude': longitude.toString(),
+        'heading': heading.toString(),
         'date': date,
-        'image': image,
+        'image': 'data:image/jpg;base64,$image',
       };
 }

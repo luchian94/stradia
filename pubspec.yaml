@@ -31,7 +31,11 @@ dependencies:
   camera: ^0.8.1+1
   stacked: ^2.1.6
   location: ^4.1.1
+  http: ^0.13.3
   uuid: ^3.0.4
+  intl: ^0.17.0
+  image: ^3.0.2
+  exif: ^2.2.0
 
 dev_dependencies:
   flutter_test:

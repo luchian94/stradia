@@ -11,18 +11,25 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
     if(model.captureStatus == CaptureStatus.Idle) {
       return Container();
     }
-    return Column(
-      children: [
-        Text(
-          "Posiziona la camera sulla strada",
-          style: Theme.of(context).textTheme.headline5,
-        ),
-        Container(
-          width: 300,
-          height: 300,
-          child: CameraPreview(model.cameraController),
-        ),
-      ],
+
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return Material(
+          elevation: 6,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ClipRect(
+              child: Container(
+                width: 300,
+                height: 300,
+                child: Center(
+                  child: CameraPreview(model.cameraController),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

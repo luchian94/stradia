@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:location/location.dart';
@@ -39,7 +38,7 @@ class HomeModel extends BaseViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.veryHigh,
+      ResolutionPreset.medium,
     );
 
     await cameraController.initialize();
@@ -67,6 +66,7 @@ class HomeModel extends BaseViewModel {
 
   void stopSession() {
     captureStatus = CaptureStatus.Idle;
+    cameraController.dispose();
     if (_captureTimer != null) {
       _captureTimer!.cancel();
     }
@@ -91,10 +91,8 @@ class HomeModel extends BaseViewModel {
 
   void _takePictureAndSend() async {
     final image = await cameraController.takePicture();
-    var imgBytes = await image.readAsBytes();
-    String base64Image = base64Encode(imgBytes);
 
-    _captureService.capture(_sessionId, base64Image);
+    _captureService.capture(_sessionId, image.path);
   }
 
   String _generateSessionId() {
