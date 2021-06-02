@@ -11,7 +11,7 @@ import 'package:stradia/utils/image-utils.dart';
 
 import '../locator.dart';
 
-class CaptureService with ReactiveServiceMixin  {
+class CaptureService with ReactiveServiceMixin {
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
   String _baseApiUrl = Constants.baseApiUrl;
 
@@ -20,16 +20,22 @@ class CaptureService with ReactiveServiceMixin  {
   late Timer _failedCapturesTimer;
 
   CaptureService() {
-    _failedCapturesTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => checkFailedCaptures());
-    listenToReactiveValues([_captureCount]);
+    _failedCapturesTimer = Timer.periodic(
+        Duration(seconds: 1), (Timer t) => checkFailedCaptures());
+    listenToReactiveValues([_captureCount, _failedCapturesCount]);
   }
 
   ReactiveValue<int> _captureCount = ReactiveValue<int>(0);
+
   int get captureCount => _captureCount.value;
+
+  ReactiveValue<int> _failedCapturesCount = ReactiveValue<int>(0);
+
+  int get failedCapturesCount => _failedCapturesCount.value;
 
   capture(String? sessionId, String imagePath) async {
     DateTime now = DateTime.now();
-    String currentFormattedDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(now);
+    String currentFormattedDate = now.toIso8601String();
 
     var location = await _getCurrentLocation();
     String base64Image = await ImageProcessor.cropSquare(imagePath);
@@ -54,9 +60,11 @@ class CaptureService with ReactiveServiceMixin  {
         _captureCount.value++;
       } else {
         _failedCaptures.add(capture);
+        _failedCapturesCount.value++;
       }
     } catch (e) {
       _failedCaptures.add(capture);
+      _failedCapturesCount.value++;
     }
   }
 
@@ -94,13 +102,13 @@ class CaptureService with ReactiveServiceMixin  {
   checkFailedCaptures() {
     if (_failedCaptures.length > 0) {
       var firstCapture = _failedCaptures[0];
-      try {
-        var url = Uri.parse('$_baseApiUrl/api/v1/image');
-        http.post(url, body: firstCapture.toJson());
-        _failedCaptures.removeAt(0);
-      } catch (e) {
-        print(e);
-      }
+      var url = Uri.parse('$_baseApiUrl/api/v1/image');
+      http.post(url, body: firstCapture.toJson()).then((response) {
+        if (response.statusCode == 201) {
+          _failedCaptures.removeAt(0);
+          _failedCapturesCount.value--;
+        }
+      });
     }
   }
 }

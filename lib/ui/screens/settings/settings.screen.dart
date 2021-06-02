@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
-              title: Text('STRADIA'),
+              title: Text('STRADIA - SETTINGS'),
               centerTitle: true,
               automaticallyImplyLeading: true,
               actions: [
