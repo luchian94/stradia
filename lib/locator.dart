@@ -5,6 +5,6 @@ import 'package:stradia/services/shared-prefs.service.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  locator.registerSingleton<CaptureService>(CaptureService());
   locator.registerSingleton<SharedPrefsService>(SharedPrefsService());
+  locator.registerSingleton<CaptureService>(CaptureService());
 }
