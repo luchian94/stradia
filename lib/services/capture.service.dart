@@ -5,14 +5,24 @@ import 'package:location/location.dart';
 import 'package:stradia/constants/constants.dart';
 import 'package:stradia/models/capture.model.dart';
 import 'package:http/http.dart' as http;
+import 'package:stradia/services/shared-prefs.service.dart';
 import 'package:stradia/utils/image-utils.dart';
 
+import '../locator.dart';
+
 class CaptureService {
+  SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
   String _baseApiUrl = Constants.baseApiUrl;
 
   List<Capture> _failedCaptures = [];
 
   int _totalCaptures = 0;
+
+  late Timer _failedCapturesTimer;
+
+  CaptureService() {
+    _failedCapturesTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => checkFailedCaptures());
+  }
 
   int get totalCaptures => _totalCaptures;
 
@@ -22,9 +32,10 @@ class CaptureService {
 
     var location = await _getCurrentLocation();
     String base64Image = await ImageProcessor.cropSquare(imagePath);
+    String deviceId = await _sharedPrefsService.getDeviceId();
 
     Capture capture = Capture(
-      "test",
+      deviceId,
       sessionId != null ? sessionId : "",
       location != null ? location.latitude : 0.0,
       location != null ? location.longitude : 0.0,
@@ -73,5 +84,18 @@ class CaptureService {
 
     _locationData = await location.getLocation();
     return _locationData;
+  }
+
+  checkFailedCaptures() {
+    if (_failedCaptures.length > 0) {
+      var firstCapture = _failedCaptures[0];
+      try {
+        var url = Uri.parse('$_baseApiUrl/api/v1/image');
+        http.post(url, body: firstCapture.toJson());
+        _failedCaptures.removeAt(0);
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 }
