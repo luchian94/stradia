@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'capture-counter/capture-counter.dart';
+import 'capture-counter.dart';
 import 'home-camera-preview.dart';
 import 'home-controls.dart';
 import 'home-gps-verify.dart';

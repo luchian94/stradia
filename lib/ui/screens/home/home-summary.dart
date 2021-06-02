@@ -8,7 +8,7 @@ class HomeSummary extends ViewModelWidget<HomeModel> {
   @override
   Widget build(BuildContext context, HomeModel model) {
     if (model.showSummary) {
-      int capturedImages = model.capturedImages;
+      int capturedImages = model.captureCount;
       return Text(
         "Hai catturato $capturedImages immagini. Ottimo lavoro!",
         style: Theme.of(context).textTheme.headline5,

@@ -14,7 +14,7 @@ enum CaptureStatus {
   Setup
 }
 
-class HomeModel extends BaseViewModel {
+class HomeModel extends ReactiveViewModel {
   final _captureService = locator<CaptureService>();
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
 
@@ -28,11 +28,15 @@ class HomeModel extends BaseViewModel {
   bool? gpServiceEnabled;
   PermissionStatus? gpsPermissionStatus;
 
-  int get capturedImages => _captureService.captureCount;
+  int get captureCount => _captureService.captureCount;
+  int get failedCapturesCount => _captureService.failedCapturesCount;
   bool get isCapturing => captureStatus == CaptureStatus.Capturing;
   bool get isSettingUp => captureStatus == CaptureStatus.Setup;
   bool get hasGpsPermission => gpsPermissionStatus == PermissionStatus.granted;
   bool get canGetLocation => gpServiceEnabled == true && hasGpsPermission;
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_captureService];
 
   Future<void> setupCamera() async {
     final cameras = await availableCameras();
