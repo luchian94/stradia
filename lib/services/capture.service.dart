@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stradia/constants/constants.dart';
@@ -106,6 +105,7 @@ class CaptureService with ReactiveServiceMixin {
       http.post(url, body: firstCapture.toJson()).then((response) {
         if (response.statusCode == 201) {
           _failedCaptures.removeAt(0);
+          _captureCount.value++;
           _failedCapturesCount.value--;
         }
       });
