@@ -34,10 +34,11 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         body: ViewModelBuilder<HomeModel>.nonReactive(
-            builder: (context, model, child) {
-              return HomeBody();
-            },
-            viewModelBuilder: () => HomeModel()),
+          builder: (context, model, child) {
+            return HomeBody();
+          },
+          viewModelBuilder: () => HomeModel(),
+        ),
       ),
     );
   }

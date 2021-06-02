@@ -15,25 +15,32 @@ class HomeBody extends ViewModelWidget<HomeModel> {
     if (model.isBusy) {
       return Center(child: CircularProgressIndicator());
     }
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Positioned(
-          top: 6,
-          right: 10,
-          child: ElevatedButton(
-            onPressed: () => model.notifyListeners(),
-            child: Icon(Icons.refresh),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: 6,
+            right: 10,
+            child: ElevatedButton(
+              onPressed: () => model.notifyListeners(),
+              child: Icon(Icons.refresh),
+            ),
           ),
-        ),
-        HomeGpsVerify(),
-        HomeSummary(),
-        CameraHomePreview(),
-        Positioned(
-          bottom: 10.0,
-          child: HomeControls(),
-        ),
-      ],
+          HomeGpsVerify(),
+          HomeSummary(),
+          CameraHomePreview(),
+          Positioned(
+            width: MediaQuery.of(context).size.width,
+            bottom: 10.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: HomeControls(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -15,6 +15,13 @@ class HomeSummary extends ViewModelWidget<HomeModel> {
         textAlign: TextAlign.center,
       );
     }
+    if (model.captureStatus == CaptureStatus.Idle) {
+      return Text(
+        "Premi INIZIA per una nuova sessione",
+        style: Theme.of(context).textTheme.headline5,
+        textAlign: TextAlign.center,
+      );
+    }
     return Container();
   }
 }

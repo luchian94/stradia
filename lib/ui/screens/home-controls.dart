@@ -9,41 +9,61 @@ class HomeControls extends ViewModelWidget<HomeModel> {
   Widget getButton(HomeModel model) {
     switch (model.captureStatus) {
       case CaptureStatus.Capturing:
-        return ElevatedButton(
-          key: ValueKey("STOP BUTTON"),
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.red)),
-          onPressed: () => model.stopSession(),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('STOP!'),
-              Icon(Icons.stop),
-            ],
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            key: ValueKey("STOP BUTTON"),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              textStyle: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
+            ),
+            onPressed: () => model.stopSession(),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('STOP!'),
+                Icon(Icons.stop, size: 30,),
+              ],
+            ),
           ),
         );
       case CaptureStatus.Setup:
-        return ElevatedButton(
-          key: ValueKey("START BUTTON"),
-          onPressed: model.canGetLocation ? () => model.startSession() : null,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('PARTIAMO!'),
-              Icon(Icons.play_arrow),
-            ],
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            key: ValueKey("START BUTTON"),
+            onPressed: model.canGetLocation ? () => model.startSession() : null,
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              textStyle: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('PARTIAMO!'),
+                Icon(Icons.play_arrow, size: 30,),
+              ],
+            ),
           ),
         );
       default:
-        return ElevatedButton(
-          key: ValueKey("SETUP BUTTON"),
-          onPressed: () => model.prepareSession(),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('INIZIA'),
-              Icon(Icons.play_arrow),
-            ],
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            key: ValueKey("SETUP BUTTON"),
+            onPressed: () => model.prepareSession(),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              textStyle: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('INIZIA'),
+                Icon(Icons.play_arrow, size: 30.0,),
+              ],
+            ),
           ),
         );
     }
