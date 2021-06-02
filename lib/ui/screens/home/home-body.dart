@@ -38,7 +38,7 @@ class HomeBody extends ViewModelWidget<HomeModel> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if(model.captureStatus == CaptureStatus.Capturing)
+                if(model.captureStatus == CaptureStatus.Capturing || model.captureStatus == CaptureStatus.Setup)
                   HomeCapturedCounter(),
                 HomeSummary(),
                 HomeGpsVerify(),
