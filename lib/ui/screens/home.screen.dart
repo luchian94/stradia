@@ -3,6 +3,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stradia/ui/screens/home.model.dart';
 
 import 'home-body.dart';
+import 'settings/settings.screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -18,7 +19,12 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 4.0),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  );
+                },
                 icon: Icon(
                   Icons.settings,
                   size: 34.0,

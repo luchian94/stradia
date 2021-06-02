@@ -15,16 +15,25 @@ class HomeBody extends ViewModelWidget<HomeModel> {
     if (model.isBusy) {
       return Center(child: CircularProgressIndicator());
     }
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          HomeControls(),
-          HomeGpsVerify(),
-          HomeSummary(),
-          CameraHomePreview()
-        ],
-      ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Positioned(
+          top: 6,
+          right: 10,
+          child: ElevatedButton(
+            onPressed: () => model.notifyListeners(),
+            child: Icon(Icons.refresh),
+          ),
+        ),
+        HomeGpsVerify(),
+        HomeSummary(),
+        CameraHomePreview(),
+        Positioned(
+          bottom: 10.0,
+          child: HomeControls(),
+        ),
+      ],
     );
   }
 }

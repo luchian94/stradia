@@ -5,6 +5,7 @@ import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stradia/locator.dart';
 import 'package:stradia/services/capture.service.dart';
+import 'package:stradia/services/shared-prefs.service.dart';
 import 'package:uuid/uuid.dart';
 
 enum CaptureStatus {
@@ -15,6 +16,7 @@ enum CaptureStatus {
 
 class HomeModel extends BaseViewModel {
   final _captureService = locator<CaptureService>();
+  SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
 
   late CameraController cameraController;
   CaptureStatus captureStatus = CaptureStatus.Idle;
@@ -57,7 +59,8 @@ class HomeModel extends BaseViewModel {
   void startSession() async {
     _sessionId = _generateSessionId();
 
-    _captureTimer = Timer.periodic(Duration(seconds: 3), (timer) {
+    int captureInterval = await _sharedPrefsService.getIntervalCapture();
+    _captureTimer = Timer.periodic(Duration(milliseconds: captureInterval), (timer) {
       _takePictureAndSend();
     });
     captureStatus = CaptureStatus.Capturing;
