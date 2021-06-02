@@ -28,7 +28,7 @@ class HomeModel extends BaseViewModel {
   bool? gpServiceEnabled;
   PermissionStatus? gpsPermissionStatus;
 
-  int get capturedImages => _captureService.totalCaptures;
+  int get capturedImages => _captureService.captureCount;
   bool get isCapturing => captureStatus == CaptureStatus.Capturing;
   bool get isSettingUp => captureStatus == CaptureStatus.Setup;
   bool get hasGpsPermission => gpsPermissionStatus == PermissionStatus.granted;

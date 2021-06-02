@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:stacked/stacked.dart';
 import 'package:stradia/constants/constants.dart';
 import 'package:stradia/models/capture.model.dart';
 import 'package:http/http.dart' as http;
@@ -10,21 +11,21 @@ import 'package:stradia/utils/image-utils.dart';
 
 import '../locator.dart';
 
-class CaptureService {
+class CaptureService with ReactiveServiceMixin  {
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
   String _baseApiUrl = Constants.baseApiUrl;
 
   List<Capture> _failedCaptures = [];
 
-  int _totalCaptures = 0;
-
   late Timer _failedCapturesTimer;
 
   CaptureService() {
     _failedCapturesTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => checkFailedCaptures());
+    listenToReactiveValues([_captureCount]);
   }
 
-  int get totalCaptures => _totalCaptures;
+  ReactiveValue<int> _captureCount = ReactiveValue<int>(0);
+  int get captureCount => _captureCount.value;
 
   capture(String? sessionId, String imagePath) async {
     DateTime now = DateTime.now();
@@ -49,14 +50,18 @@ class CaptureService {
       var response = await http.post(url, body: capture.toJson());
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-      _totalCaptures++;
+      if (response.statusCode == 201) {
+        _captureCount.value++;
+      } else {
+        _failedCaptures.add(capture);
+      }
     } catch (e) {
       _failedCaptures.add(capture);
     }
   }
 
   reset() {
-    _totalCaptures = 0;
+    _captureCount.value = 0;
   }
 
   Future<LocationData?> _getCurrentLocation() async {

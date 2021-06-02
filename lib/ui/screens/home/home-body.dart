@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import 'capture-counter/capture-counter.dart';
 import 'home-camera-preview.dart';
 import 'home-controls.dart';
 import 'home-gps-verify.dart';
@@ -25,12 +26,26 @@ class HomeBody extends ViewModelWidget<HomeModel> {
             right: 10,
             child: ElevatedButton(
               onPressed: () => model.notifyListeners(),
-              child: Icon(Icons.refresh),
+              child: Row(
+                children: [
+                  Text('Refresh Camera'),
+                  Icon(Icons.refresh),
+                ],
+              ),
             ),
           ),
-          HomeGpsVerify(),
-          HomeSummary(),
-          CameraHomePreview(),
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if(model.captureStatus == CaptureStatus.Capturing)
+                  HomeCapturedCounter(),
+                HomeSummary(),
+                HomeGpsVerify(),
+                CameraHomePreview(),
+              ],
+            ),
+          ),
           Positioned(
             width: MediaQuery.of(context).size.width,
             bottom: 10.0,

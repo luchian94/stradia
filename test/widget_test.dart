@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:stradia/ui/screens/home.screen.dart';
+import 'package:stradia/ui/screens/home/home.screen.dart';
 
 
 void main() {

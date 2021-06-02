@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/ui/screens/home.model.dart';
+import 'package:stradia/ui/screens/home/home.model.dart';
 
 import 'home-body.dart';
-import 'settings/settings.screen.dart';
+import '../settings/settings.screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);

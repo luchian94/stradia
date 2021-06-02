@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:stradia/ui/screens/home.screen.dart';
+import 'package:stradia/ui/screens/home/home.screen.dart';
 
 import 'locator.dart';
 
