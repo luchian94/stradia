@@ -2,9 +2,59 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:exif/exif.dart';
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:image_crop/image_crop.dart';
 
 class ImageProcessor {
+  static Future<String> getBase64(String imagePath) async {
+    final file = File(imagePath);
+    var fileBytes = await file.readAsBytes();
+    return base64Encode(fileBytes);
+  }
+
+  static Future<File> cropByArea(String srcFilePath, Rect? area) async {
+    final originalFile = File(srcFilePath);
+
+    /*final sampledFile = await ImageCrop.sampleImage(
+      file: widget.image,
+      preferredSize: (2000 / scale).round(),
+    );*/
+
+    if (area != null) {
+      final croppedFile = await ImageCrop.cropImage(file: originalFile, area: area);
+      return croppedFile;
+    } else {
+      return originalFile;
+    }
+  }
+
+  static Future<String> getBase64ResizedImage(String srcFilePath, int width, int height) async {
+    final originalFile = File(srcFilePath);
+
+    img.Image? src = img.decodeImage(originalFile.readAsBytesSync());
+
+    if (src != null) {
+      img.Image destImage = img.copyResize(src, width: width, height: height);
+      var encodedImage = img.encodeJpg(destImage);
+      return base64Encode(encodedImage);
+    } else {
+      return '';
+    }
+  }
+
+  static Future<void> fixImageRotation(String srcFilePath) async {
+    final originalFile = File(srcFilePath);
+
+    img.Image? src = img.decodeImage(originalFile.readAsBytesSync());
+
+    if (src != null) {
+      img.Image destImage = img.bakeOrientation(src);
+      var png = img.encodeJpg(destImage);
+      await File(srcFilePath).writeAsBytes(png);
+    }
+  }
+
   static Future<String> cropSquare(String srcFilePath) async {
     final originalFile = File(srcFilePath);
 
@@ -32,23 +82,16 @@ class ImageProcessor {
       final height = originalImage.height;
       final width = originalImage.width;
 
-      // Let's check for the image size
       if (height >= width) {
-        // I'm interested in portrait photos so
-        // I'll just return here
         return originalFile;
       }
 
-      // We'll use the exif package to read exif data
-      // This is map of several exif properties
-      // Let's check 'Image Orientation'
       final exifData = await readExifFromBytes(imageBytes);
 
       late img.Image fixedImage;
 
       if (height < width) {
-        // rotate
-        if (exifData!['Image Orientation']!.printable!.contains('Horizontal')) {
+        if (exifData['Image Orientation']!.printable!.contains('Horizontal')) {
           fixedImage = img.copyRotate(originalImage, 90);
         } else if (exifData['Image Orientation']!.printable!.contains('180')) {
           fixedImage = img.copyRotate(originalImage, -90);
@@ -57,9 +100,6 @@ class ImageProcessor {
         }
       }
 
-      // Here you can select whether you'd like to save it as png
-      // or jpg with some compression
-      // I choose jpg with 100% quality
       final fixedFile = await originalFile.writeAsBytes(img.encodeJpg(fixedImage));
 
       return fixedFile;

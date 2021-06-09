@@ -42,7 +42,7 @@ class HomeControls extends ViewModelWidget<HomeModel> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('PARTIAMO!'),
-                Icon(Icons.play_arrow, size: 30,),
+                Icon(Icons.drive_eta, size: 30,),
               ],
             ),
           ),

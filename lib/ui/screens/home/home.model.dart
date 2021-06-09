@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:location/location.dart';
@@ -6,6 +7,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stradia/locator.dart';
 import 'package:stradia/services/capture.service.dart';
 import 'package:stradia/services/shared-prefs.service.dart';
+import 'package:stradia/utils/image-utils.dart';
 import 'package:uuid/uuid.dart';
 
 enum CaptureStatus {
@@ -24,6 +26,7 @@ class HomeModel extends ReactiveViewModel {
   String? _sessionId;
   Timer? _captureTimer;
   bool showSummary = false;
+  bool capturingImageForCrop = false;
 
   bool? gpServiceEnabled;
   PermissionStatus? gpsPermissionStatus;
@@ -44,7 +47,7 @@ class HomeModel extends ReactiveViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
     );
 
     await cameraController.initialize();
@@ -94,6 +97,21 @@ class HomeModel extends ReactiveViewModel {
     if (gpsPermissionStatus == PermissionStatus.denied) {
       gpsPermissionStatus = await location.requestPermission();
     }
+  }
+
+  Future<File> takeCameraPicture() async {
+    final image = await cameraController.takePicture();
+    await ImageProcessor.fixImageRotation(image.path);
+    return File(image.path);
+  }
+
+  Future<File> getPictureFoCrop() async {
+    capturingImageForCrop = true;
+    notifyListeners();
+    var picture = await takeCameraPicture();
+    capturingImageForCrop = false;
+    notifyListeners();
+    return picture;
   }
 
   void _takePictureAndSend() async {

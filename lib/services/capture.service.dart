@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stradia/constants/constants.dart';
@@ -14,9 +15,14 @@ class CaptureService with ReactiveServiceMixin {
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
   String _baseApiUrl = Constants.baseApiUrl;
 
+  final int _imgWidth = 600;
+  final int _imgHeight = 600;
+
   List<Capture> _failedCaptures = [];
 
   late Timer _failedCapturesTimer;
+
+  Rect? captureArea;
 
   CaptureService() {
     _failedCapturesTimer = Timer.periodic(
@@ -37,8 +43,15 @@ class CaptureService with ReactiveServiceMixin {
     String currentFormattedDate = now.toIso8601String();
 
     var location = await _getCurrentLocation();
-    String base64Image = await ImageProcessor.cropSquare(imagePath);
     String deviceId = await _sharedPrefsService.getDeviceId();
+
+    String base64Image;
+    if (captureArea != null) {
+      var croppedImage = await ImageProcessor.cropByArea(imagePath, captureArea);
+      base64Image = await ImageProcessor.getBase64ResizedImage(croppedImage.path, _imgWidth, _imgHeight);
+    } else {
+      base64Image = await ImageProcessor.getBase64ResizedImage(imagePath, _imgWidth, _imgHeight);
+    }
 
     Capture capture = Capture(
       deviceId,

@@ -17,42 +17,31 @@ class HomeBody extends ViewModelWidget<HomeModel> {
       return Center(child: CircularProgressIndicator());
     }
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-      child: Stack(
-        alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Positioned(
-            top: 6,
-            right: 10,
-            child: ElevatedButton(
-              onPressed: () => model.notifyListeners(),
-              child: Row(
+          Spacer(),
+          Material(
+            elevation: 12.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Refresh Camera'),
-                  Icon(Icons.refresh),
+                  if(model.captureStatus == CaptureStatus.Capturing || model.captureStatus == CaptureStatus.Setup)
+                    HomeCapturedCounter(),
+                  HomeSummary(),
+                  HomeGpsVerify(),
+                  CameraHomePreview(),
                 ],
               ),
             ),
           ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if(model.captureStatus == CaptureStatus.Capturing || model.captureStatus == CaptureStatus.Setup)
-                  HomeCapturedCounter(),
-                HomeSummary(),
-                HomeGpsVerify(),
-                CameraHomePreview(),
-              ],
-            ),
-          ),
-          Positioned(
-            width: MediaQuery.of(context).size.width,
-            bottom: 10.0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: HomeControls(),
-            ),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14.0),
+            child: HomeControls(),
           ),
         ],
       ),
