@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stradia/ui/screens/home/home.model.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'home-body.dart';
 import '../settings/settings.screen.dart';
@@ -37,6 +38,7 @@ class HomeScreen extends StatelessWidget {
           builder: (context, model, child) {
             return HomeBody();
           },
+          onModelReady: (model) => Wakelock.enable(),
           viewModelBuilder: () => HomeModel(),
         ),
       ),

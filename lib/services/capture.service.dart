@@ -85,6 +85,8 @@ class CaptureService with ReactiveServiceMixin {
   listenToLocationChange() {
     Location location = new Location();
 
+    location.changeSettings(interval: 100, accuracy: LocationAccuracy.navigation);
+
     location.onLocationChanged.listen((LocationData currentLocation) {
       _currentLocation.value = currentLocation;
     });
