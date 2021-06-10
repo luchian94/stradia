@@ -47,7 +47,7 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Imposta crop  '),
+                Text('Seleziona l\'area  '),
                 Icon(Icons.crop),
               ],
             ),

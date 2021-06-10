@@ -91,9 +91,9 @@ class ImageProcessor {
       late img.Image fixedImage;
 
       if (height < width) {
-        if (exifData['Image Orientation']!.printable!.contains('Horizontal')) {
+        if (exifData['Image Orientation']!.printable.contains('Horizontal')) {
           fixedImage = img.copyRotate(originalImage, 90);
-        } else if (exifData['Image Orientation']!.printable!.contains('180')) {
+        } else if (exifData['Image Orientation']!.printable.contains('180')) {
           fixedImage = img.copyRotate(originalImage, -90);
         } else {
           fixedImage = img.copyRotate(originalImage, 0);

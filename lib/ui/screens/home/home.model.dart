@@ -28,11 +28,12 @@ class HomeModel extends ReactiveViewModel {
   bool showSummary = false;
   bool capturingImageForCrop = false;
 
-  bool? gpServiceEnabled;
+  late bool gpServiceEnabled;
   PermissionStatus? gpsPermissionStatus;
 
   int get captureCount => _captureService.captureCount;
   int get failedCapturesCount => _captureService.failedCapturesCount;
+  double? get currentSpeed => _captureService.currentSpeed;
   bool get isCapturing => captureStatus == CaptureStatus.Capturing;
   bool get isSettingUp => captureStatus == CaptureStatus.Setup;
   bool get hasGpsPermission => gpsPermissionStatus == PermissionStatus.granted;
@@ -91,12 +92,20 @@ class HomeModel extends ReactiveViewModel {
     gpServiceEnabled = await location.serviceEnabled();
     if (gpServiceEnabled == false) {
       gpServiceEnabled = await location.requestService();
+      if (!gpServiceEnabled) {
+        return null;
+      }
     }
 
     gpsPermissionStatus = await location.hasPermission();
     if (gpsPermissionStatus == PermissionStatus.denied) {
       gpsPermissionStatus = await location.requestPermission();
+      if (gpsPermissionStatus != PermissionStatus.granted) {
+        return null;
+      }
     }
+
+    _captureService.listenToLocationChange();
   }
 
   Future<File> takeCameraPicture() async {

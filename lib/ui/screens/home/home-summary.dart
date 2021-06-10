@@ -10,7 +10,7 @@ class HomeSummary extends ViewModelWidget<HomeModel> {
     if (model.showSummary) {
       int capturedImages = model.captureCount;
       return Text(
-        "Hai catturato $capturedImages immagini. Ottimo lavoro!",
+        capturedImages == 0 ? "0 immagini catturate. Riprova" : "Hai catturato $capturedImages immagini. Ottimo lavoro!",
         style: Theme.of(context).textTheme.headline5,
         textAlign: TextAlign.center,
       );

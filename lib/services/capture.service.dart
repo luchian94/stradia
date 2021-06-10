@@ -25,24 +25,26 @@ class CaptureService with ReactiveServiceMixin {
   Rect? captureArea;
 
   CaptureService() {
-    _failedCapturesTimer = Timer.periodic(
-        Duration(seconds: 1), (Timer t) => checkFailedCaptures());
-    listenToReactiveValues([_captureCount, _failedCapturesCount]);
+    _failedCapturesTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _checkFailedCaptures());
+    listenToReactiveValues([_captureCount, _failedCapturesCount, _currentLocation]);
   }
 
   ReactiveValue<int> _captureCount = ReactiveValue<int>(0);
+  ReactiveValue<int> _failedCapturesCount = ReactiveValue<int>(0);
+  ReactiveValue<LocationData?> _currentLocation = ReactiveValue<LocationData?>(null);
 
   int get captureCount => _captureCount.value;
-
-  ReactiveValue<int> _failedCapturesCount = ReactiveValue<int>(0);
-
   int get failedCapturesCount => _failedCapturesCount.value;
+  LocationData? get currentLocation => _currentLocation.value;
+  double? get currentSpeed => _currentLocation.value != null && _currentLocation.value!.speed != null ? _currentLocation.value!.speed! * 3.6 : 0.0;
 
   capture(String? sessionId, String imagePath) async {
+    if (currentSpeed != null && currentSpeed! <= 5.0) {
+      return;
+    }
     DateTime now = DateTime.now();
     String currentFormattedDate = now.toIso8601String();
 
-    var location = await _getCurrentLocation();
     String deviceId = await _sharedPrefsService.getDeviceId();
 
     String base64Image;
@@ -56,9 +58,9 @@ class CaptureService with ReactiveServiceMixin {
     Capture capture = Capture(
       deviceId,
       sessionId != null ? sessionId : "",
-      location != null ? location.latitude : 0.0,
-      location != null ? location.longitude : 0.0,
-      location != null ? location.heading : 0.0,
+      _currentLocation.value != null ? _currentLocation.value!.latitude : 0.0,
+      _currentLocation.value != null ? _currentLocation.value!.longitude : 0.0,
+      _currentLocation.value != null ? _currentLocation.value!.heading : 0.0,
       currentFormattedDate,
       base64Image,
     );
@@ -80,38 +82,19 @@ class CaptureService with ReactiveServiceMixin {
     }
   }
 
+  listenToLocationChange() {
+    Location location = new Location();
+
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      _currentLocation.value = currentLocation;
+    });
+  }
+
   reset() {
     _captureCount.value = 0;
   }
 
-  Future<LocationData?> _getCurrentLocation() async {
-    Location location = new Location();
-
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return null;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
-
-    _locationData = await location.getLocation();
-    return _locationData;
-  }
-
-  checkFailedCaptures() {
+  _checkFailedCaptures() {
     if (_failedCaptures.length > 0) {
       var firstCapture = _failedCaptures[0];
       var url = Uri.parse('$_baseApiUrl/api/v1/image');
