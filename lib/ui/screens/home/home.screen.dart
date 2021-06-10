@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stradia/ui/screens/home/home-body-portrait.dart';
 import 'package:stradia/ui/screens/home/home.model.dart';
 import 'package:wakelock/wakelock.dart';
 
-import 'home-body.dart';
 import '../settings/settings.screen.dart';
+import 'home-body-landscape.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -36,7 +37,15 @@ class HomeScreen extends StatelessWidget {
         ),
         body: ViewModelBuilder<HomeModel>.nonReactive(
           builder: (context, model, child) {
-            return HomeBody();
+            return OrientationBuilder(
+              builder: (context, orientation){
+                if(orientation == Orientation.portrait){
+                  return HomeBodyPortrait();
+                }else{
+                  return HomeBodyLandscape();
+                }
+              },
+            );
           },
           onModelReady: (model) => Wakelock.enable(),
           viewModelBuilder: () => HomeModel(),

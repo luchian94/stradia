@@ -15,20 +15,13 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: ClipRect(
-            child: Container(
-              width: 400,
-              height: 400,
-              child: Center(
-                child: CameraPreview(model.cameraController),
-              ),
-            ),
-          ),
-        ),
+        Expanded(child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Center(child: CameraPreview(model.cameraController)),
+        )),
         if (model.capturingImageForCrop) CircularProgressIndicator(),
-        if (!model.capturingImageForCrop)
+        if (!model.capturingImageForCrop &&
+            model.captureStatus == CaptureStatus.Setup)
           ElevatedButton(
             onPressed: () async {
               var picture = await model.getPictureFoCrop();
@@ -41,8 +34,7 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.orangeAccent,
-              textStyle:
-                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+              textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,

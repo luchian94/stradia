@@ -82,11 +82,15 @@ class CaptureService with ReactiveServiceMixin {
     }
   }
 
-  listenToLocationChange() {
+  listenToLocationChange() async {
     Location location = new Location();
 
-    location.changeSettings(interval: 100, accuracy: LocationAccuracy.navigation);
+    await location.changeSettings(interval: 100, accuracy: LocationAccuracy.navigation);
+    var serviceEnabled = await location.serviceEnabled();
+    var permission = await location.hasPermission();
 
+    print(serviceEnabled);
+    print(permission);
     location.onLocationChanged.listen((LocationData currentLocation) {
       _currentLocation.value = currentLocation;
     });

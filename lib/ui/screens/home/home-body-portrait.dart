@@ -9,8 +9,8 @@ import 'home-gps-verify.dart';
 import 'home-summary.dart';
 import 'home.model.dart';
 
-class HomeBody extends ViewModelWidget<HomeModel> {
-  HomeBody({Key? key}) : super(key: key);
+class HomeBodyPortrait extends ViewModelWidget<HomeModel> {
+  HomeBodyPortrait({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, HomeModel model) {
@@ -29,28 +29,27 @@ class HomeBody extends ViewModelWidget<HomeModel> {
               child: HomeGpsSpeed(),
             ),
           ),
-          Spacer(),
-          Material(
-            elevation: 6.0,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (model.captureStatus == CaptureStatus.Capturing ||
-                      model.captureStatus == CaptureStatus.Setup)
-                    HomeCapturedCounter(),
-                  HomeSummary(),
-                  HomeGpsVerify(),
-                  CameraHomePreview(),
-                ],
+          Expanded(
+            child: Material(
+              elevation: 6.0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (model.captureStatus == CaptureStatus.Capturing ||
+                        model.captureStatus == CaptureStatus.Setup)
+                      HomeCapturedCounter(),
+                    HomeSummary(),
+                    HomeGpsVerify(),
+                    Expanded(child: CameraHomePreview()),
+                  ],
+                ),
               ),
             ),
           ),
-          Spacer(),
           Padding(
-            padding: const EdgeInsets.only(bottom: 14.0),
+            padding: const EdgeInsets.only(bottom: 14.0, top: 22.0),
             child: HomeControls(),
           ),
         ],
