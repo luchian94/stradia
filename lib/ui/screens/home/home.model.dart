@@ -68,8 +68,8 @@ class HomeModel extends ReactiveViewModel {
     _sessionId = _generateSessionId();
 
     int captureInterval = await _sharedPrefsService.getIntervalCapture();
-    _captureTimer = Timer.periodic(Duration(milliseconds: captureInterval), (timer) {
-      _takePictureAndSend();
+    _captureTimer = Timer.periodic(Duration(milliseconds: captureInterval), (timer) async {
+      await _takePictureAndSend();
     });
     captureStatus = CaptureStatus.Capturing;
     notifyListeners();
@@ -123,7 +123,7 @@ class HomeModel extends ReactiveViewModel {
     return picture;
   }
 
-  void _takePictureAndSend() async {
+  Future<void> _takePictureAndSend() async {
     final image = await cameraController.takePicture();
 
     _captureService.capture(_sessionId, image.path);

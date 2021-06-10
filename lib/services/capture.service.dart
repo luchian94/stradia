@@ -39,7 +39,7 @@ class CaptureService with ReactiveServiceMixin {
   double? get currentSpeed => _currentLocation.value != null && _currentLocation.value!.speed != null ? _currentLocation.value!.speed! * 3.6 : 0.0;
 
   capture(String? sessionId, String imagePath) async {
-    if (currentSpeed != null && currentSpeed! <= 5.0) {
+    if (currentSpeed != null && currentSpeed! < 5.0) {
       return;
     }
     DateTime now = DateTime.now();

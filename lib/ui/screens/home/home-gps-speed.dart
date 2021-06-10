@@ -10,10 +10,15 @@ class HomeGpsSpeed extends ViewModelWidget<HomeModel> {
     var currentSpeed = model.currentSpeed != null ? model.currentSpeed!.round() : null;
     String speed = currentSpeed != null ? currentSpeed.toString() : '0';
 
-    var textStyle = TextStyle(
-        fontSize: 14.0,
+    var textStyle1 = TextStyle(
+        fontSize: 18.0,
         fontWeight: FontWeight.w900,
-        color: currentSpeed != null && currentSpeed <= 5 ? Colors.redAccent : Colors.green
+        color: currentSpeed != null && currentSpeed < 5 ? Colors.redAccent : Colors.green
+    );
+    var textStyle = TextStyle(
+        fontSize: 10.0,
+        fontWeight: FontWeight.w900,
+        color: currentSpeed != null && currentSpeed < 5 ? Colors.redAccent : Colors.green
     );
 
     return SizedBox(
@@ -29,7 +34,7 @@ class HomeGpsSpeed extends ViewModelWidget<HomeModel> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  Text(speed, style: textStyle),
+                  Text(speed, style: textStyle1),
                   Text(
                     "km/h",
                     style: textStyle,
