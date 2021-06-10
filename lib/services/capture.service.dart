@@ -39,46 +39,45 @@ class CaptureService with ReactiveServiceMixin {
   double? get currentSpeed => _currentLocation.value != null && _currentLocation.value!.speed != null ? _currentLocation.value!.speed! * 3.6 : 0.0;
 
   capture(String? sessionId, String imagePath) async {
-    if (currentSpeed != null && currentSpeed! < 5.0) {
-      return;
-    }
-    DateTime now = DateTime.now();
-    String currentFormattedDate = now.toIso8601String();
+    if (currentSpeed != null && currentSpeed! >= 5.0) {
+      DateTime now = DateTime.now();
+      String currentFormattedDate = now.toIso8601String();
 
-    String deviceId = await _sharedPrefsService.getDeviceId();
+      String deviceId = await _sharedPrefsService.getDeviceId();
 
-    String base64Image;
-    if (captureArea != null) {
-      var croppedImage = await ImageProcessor.cropByArea(imagePath, captureArea);
-      base64Image = await ImageProcessor.getBase64ResizedImage(croppedImage.path, _imgWidth, _imgHeight);
-    } else {
-      base64Image = await ImageProcessor.getBase64ResizedImage(imagePath, _imgWidth, _imgHeight);
-    }
-
-    Capture capture = Capture(
-      deviceId,
-      sessionId != null ? sessionId : "",
-      _currentLocation.value != null ? _currentLocation.value!.latitude : 0.0,
-      _currentLocation.value != null ? _currentLocation.value!.longitude : 0.0,
-      _currentLocation.value != null ? _currentLocation.value!.heading : 0.0,
-      currentFormattedDate,
-      base64Image,
-    );
-
-    try {
-      var url = Uri.parse('$_baseApiUrl/api/v1/image');
-      var response = await http.post(url, body: capture.toJson());
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      if (response.statusCode == 201) {
-        _captureCount.value++;
+      String base64Image;
+      if (captureArea != null) {
+        var croppedImage = await ImageProcessor.cropByArea(imagePath, captureArea);
+        base64Image = await ImageProcessor.getBase64ResizedImage(croppedImage.path, _imgWidth, _imgHeight);
       } else {
+        base64Image = await ImageProcessor.getBase64ResizedImage(imagePath, _imgWidth, _imgHeight);
+      }
+
+      Capture capture = Capture(
+        deviceId,
+        sessionId != null ? sessionId : "",
+        _currentLocation.value != null ? _currentLocation.value!.latitude : 0.0,
+        _currentLocation.value != null ? _currentLocation.value!.longitude : 0.0,
+        _currentLocation.value != null ? _currentLocation.value!.heading : 0.0,
+        currentFormattedDate,
+        base64Image,
+      );
+
+      try {
+        var url = Uri.parse('$_baseApiUrl/api/v1/image');
+        var response = await http.post(url, body: capture.toJson());
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        if (response.statusCode == 201) {
+          _captureCount.value++;
+        } else {
+          _failedCaptures.add(capture);
+          _failedCapturesCount.value++;
+        }
+      } catch (e) {
         _failedCaptures.add(capture);
         _failedCapturesCount.value++;
       }
-    } catch (e) {
-      _failedCaptures.add(capture);
-      _failedCapturesCount.value++;
     }
   }
 

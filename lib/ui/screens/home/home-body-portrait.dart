@@ -42,6 +42,8 @@ class HomeBodyPortrait extends ViewModelWidget<HomeModel> {
                       HomeCapturedCounter(),
                     HomeSummary(),
                     HomeGpsVerify(),
+                    if (model.captureStatus == CaptureStatus.Capturing ||
+                        model.captureStatus == CaptureStatus.Setup)
                     Expanded(child: CameraHomePreview()),
                   ],
                 ),
