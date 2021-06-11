@@ -25,12 +25,14 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
           ElevatedButton(
             onPressed: () async {
               var picture = await model.getPictureFoCrop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CropImageScreen(image: picture),
-                ),
-              );
+              if (picture != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CropImageScreen(image: picture),
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.orangeAccent,

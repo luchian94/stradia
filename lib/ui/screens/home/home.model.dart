@@ -48,7 +48,8 @@ class HomeModel extends ReactiveViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.max
+      ResolutionPreset.max,
+      enableAudio: false
     );
 
     await cameraController.initialize();
@@ -79,6 +80,7 @@ class HomeModel extends ReactiveViewModel {
   void stopSession() {
     captureStatus = CaptureStatus.Idle;
     cameraController.dispose();
+    _captureService.cancelLocationSubscription();
     if (_captureTimer != null) {
       _captureTimer!.cancel();
     }
@@ -109,13 +111,16 @@ class HomeModel extends ReactiveViewModel {
     _captureService.listenToLocationChange();
   }
 
-  Future<File> takeCameraPicture() async {
+  Future<File?> takeCameraPicture() async {
+    if (cameraController.value.isTakingPicture) {
+      return null;
+    }
     final image = await cameraController.takePicture();
     await ImageProcessor.fixImageRotation(image.path);
     return File(image.path);
   }
 
-  Future<File> getPictureFoCrop() async {
+  Future<File?> getPictureFoCrop() async {
     capturingImageForCrop = true;
     notifyListeners();
     var picture = await takeCameraPicture();
@@ -127,7 +132,9 @@ class HomeModel extends ReactiveViewModel {
   Future<void> _takePictureAndSend() async {
     if (_captureService.currentSpeed != null && _captureService.currentSpeed! >= 5.0) {
       final image = await takeCameraPicture();
-      _captureService.capture(_sessionId, image.path);
+      if (image != null) {
+        _captureService.capture(_sessionId, image.path);
+      }
     }
   }
 

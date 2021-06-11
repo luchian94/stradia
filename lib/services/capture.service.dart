@@ -21,6 +21,7 @@ class CaptureService with ReactiveServiceMixin {
   List<Capture> _failedCaptures = [];
 
   late Timer _failedCapturesTimer;
+  StreamSubscription<LocationData>? _locationListener;
 
   Rect? captureArea;
 
@@ -33,8 +34,7 @@ class CaptureService with ReactiveServiceMixin {
 
   ReactiveValue<int> _captureCount = ReactiveValue<int>(0);
   ReactiveValue<int> _failedCapturesCount = ReactiveValue<int>(0);
-  ReactiveValue<LocationData?> _currentLocation =
-      ReactiveValue<LocationData?>(null);
+  ReactiveValue<LocationData?> _currentLocation = ReactiveValue<LocationData?>(null);
 
   int get captureCount => _captureCount.value;
 
@@ -45,7 +45,7 @@ class CaptureService with ReactiveServiceMixin {
   double? get currentSpeed =>
       _currentLocation.value != null && _currentLocation.value!.speed != null
           ? _currentLocation.value!.speed! * 3.6
-          : 0.0;
+          : null;
 
   capture(String? sessionId, String imagePath) async {
     DateTime now = DateTime.now();
@@ -77,8 +77,8 @@ class CaptureService with ReactiveServiceMixin {
     try {
       var url = Uri.parse('$_baseApiUrl/api/v1/image');
       var response = await http.post(url, body: capture.toJson());
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
       if (response.statusCode == 201) {
         _captureCount.value++;
       } else {
@@ -92,15 +92,15 @@ class CaptureService with ReactiveServiceMixin {
   }
 
   listenToLocationChange() async {
+    cancelLocationSubscription();
     Location location = new Location();
 
     await location.changeSettings(interval: 100, accuracy: LocationAccuracy.navigation);
-    var serviceEnabled = await location.serviceEnabled();
+    /*var serviceEnabled = await location.serviceEnabled();
     var permission = await location.hasPermission();
-
     print(serviceEnabled);
-    print(permission);
-    location.onLocationChanged.listen((LocationData currentLocation) {
+    print(permission);*/
+    _locationListener = location.onLocationChanged.listen((LocationData currentLocation) {
       _currentLocation.value = currentLocation;
     });
   }
@@ -120,6 +120,14 @@ class CaptureService with ReactiveServiceMixin {
           _failedCapturesCount.value--;
         }
       });
+    }
+  }
+
+  cancelLocationSubscription() {
+    if (_locationListener != null) {
+      _locationListener!.cancel();
+      _locationListener = null;
+      _currentLocation.value = null;
     }
   }
 }

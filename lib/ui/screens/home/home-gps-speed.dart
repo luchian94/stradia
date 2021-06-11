@@ -8,7 +8,7 @@ class HomeGpsSpeed extends ViewModelWidget<HomeModel> {
   @override
   Widget build(BuildContext context, HomeModel model) {
     var currentSpeed = model.currentSpeed != null ? model.currentSpeed!.round() : null;
-    String speed = currentSpeed != null ? currentSpeed.toString() : '0';
+    String speed = currentSpeed != null ? currentSpeed.toString() : '--';
 
     var textStyle1 = TextStyle(
         fontSize: 20.0,
