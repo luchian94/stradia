@@ -124,9 +124,10 @@ class HomeModel extends ReactiveViewModel {
   }
 
   Future<void> _takePictureAndSend() async {
-    final image = await cameraController.takePicture();
-
-    _captureService.capture(_sessionId, image.path);
+    if (_captureService.currentSpeed != null && _captureService.currentSpeed! >= 5.0) {
+      final image = await takeCameraPicture();
+      _captureService.capture(_sessionId, image.path);
+    }
   }
 
   String _generateSessionId() {

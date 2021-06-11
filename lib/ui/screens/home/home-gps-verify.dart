@@ -10,10 +10,10 @@ class HomeGpsVerify extends ViewModelWidget<HomeModel> {
   Widget build(BuildContext context, HomeModel model) {
     if (model.isSettingUp) {
       if(model.gpServiceEnabled == false) {
-        return Text('Attenzione! È necessario abilitare il servizio GPS per continuare');
+        return Text('Attenzione! È necessario abilitare il servizio GPS e riavviare app');
       }
       if(!model.hasGpsPermission) {
-        return Text('Attenzione! È necessario garantire il permesso della posizione per poter continuare');
+        return Text('Attenzione! È necessario garantire il permesso della posizione e riavviare app');
       }
     }
     return Container();
