@@ -48,7 +48,7 @@ class HomeModel extends ReactiveViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.max,
+      ResolutionPreset.high,
       enableAudio: false
     );
 
