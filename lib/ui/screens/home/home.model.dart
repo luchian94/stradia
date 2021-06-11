@@ -54,6 +54,7 @@ class HomeModel extends ReactiveViewModel {
 
     await cameraController.initialize();
     cameraController.setFlashMode(FlashMode.off);
+    cameraController.setFocusMode(FocusMode.locked);
   }
 
   void prepareSession() async {
@@ -70,8 +71,8 @@ class HomeModel extends ReactiveViewModel {
     _sessionId = _generateSessionId();
 
     int captureInterval = await _sharedPrefsService.getIntervalCapture();
-    _captureTimer = Timer.periodic(Duration(milliseconds: captureInterval), (timer) async {
-      await _takePictureAndSend();
+    _captureTimer = Timer.periodic(Duration(milliseconds: captureInterval), (timer) {
+      _takePictureAndSend();
     });
     captureStatus = CaptureStatus.Capturing;
     notifyListeners();
