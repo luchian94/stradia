@@ -48,10 +48,11 @@ class HomeModel extends ReactiveViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.max,
+      ResolutionPreset.max
     );
 
     await cameraController.initialize();
+    cameraController.setFlashMode(FlashMode.off);
   }
 
   void prepareSession() async {
@@ -124,10 +125,10 @@ class HomeModel extends ReactiveViewModel {
   }
 
   Future<void> _takePictureAndSend() async {
-    if (_captureService.currentSpeed != null && _captureService.currentSpeed! >= 5.0) {
+    // if (_captureService.currentSpeed != null && _captureService.currentSpeed! >= 5.0) {
       final image = await takeCameraPicture();
       _captureService.capture(_sessionId, image.path);
-    }
+    // }
   }
 
   String _generateSessionId() {

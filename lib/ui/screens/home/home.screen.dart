@@ -39,7 +39,6 @@ class HomeScreen extends StatelessWidget {
           builder: (context, model, child) {
             return OrientationBuilder(
               builder: (context, orientation){
-                model.notifyListeners();
                 if(orientation == Orientation.portrait){
                   return HomeBodyPortrait();
                 }else{

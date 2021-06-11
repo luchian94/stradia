@@ -11,13 +11,15 @@ class HomeSummary extends ViewModelWidget<HomeModel> {
       int capturedImages = model.captureCount;
       return Text(
         capturedImages == 0 ? "0 immagini catturate. Riprova" : "Hai catturato $capturedImages immagini. Ottimo lavoro!",
-        style: Theme.of(context).textTheme.headline5,
+        style: Theme.of(context).textTheme.headline5!.copyWith(
+          color: capturedImages == 0 ? Colors.orangeAccent : Colors.green
+        ),
         textAlign: TextAlign.center,
       );
     }
     if (model.captureStatus == CaptureStatus.Idle) {
       return Text(
-        "Premi INIZIA per una nuova sessione",
+        "Inizia una nuova sessione",
         style: Theme.of(context).textTheme.headline5,
         textAlign: TextAlign.center,
       );

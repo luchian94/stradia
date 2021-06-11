@@ -11,19 +11,19 @@ class HomeGpsSpeed extends ViewModelWidget<HomeModel> {
     String speed = currentSpeed != null ? currentSpeed.toString() : '0';
 
     var textStyle1 = TextStyle(
-        fontSize: 18.0,
+        fontSize: 20.0,
         fontWeight: FontWeight.w900,
         color: currentSpeed != null && currentSpeed < 5 ? Colors.redAccent : Colors.green
     );
     var textStyle = TextStyle(
-        fontSize: 10.0,
+        fontSize: 12.0,
         fontWeight: FontWeight.w900,
         color: currentSpeed != null && currentSpeed < 5 ? Colors.redAccent : Colors.green
     );
 
     return SizedBox(
-      width: 56.0,
-      height: 56.0,
+      width: 60.0,
+      height: 60.0,
       child: Center(
         child: Material(
           shape: const CircleBorder(),
