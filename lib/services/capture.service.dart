@@ -74,7 +74,7 @@ class CaptureService with ReactiveServiceMixin {
       base64Image,
     );
 
-    /*try {
+    try {
       var url = Uri.parse('$_baseApiUrl/api/v1/image');
       var response = await http.post(url, body: capture.toJson());
       print('Response status: ${response.statusCode}');
@@ -88,7 +88,7 @@ class CaptureService with ReactiveServiceMixin {
     } catch (e) {
       _failedCaptures.add(capture);
       _failedCapturesCount.value++;
-    }*/
+    }
   }
 
   listenToLocationChange() async {
