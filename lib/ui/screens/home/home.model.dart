@@ -48,13 +48,12 @@ class HomeModel extends ReactiveViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.high,
+      ResolutionPreset.veryHigh,
       enableAudio: false
     );
 
     await cameraController.initialize();
     cameraController.setFlashMode(FlashMode.off);
-    cameraController.setFocusMode(FocusMode.locked);
   }
 
   void prepareSession() async {

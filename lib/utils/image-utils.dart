@@ -16,13 +16,13 @@ class ImageProcessor {
   static Future<File> cropByArea(String srcFilePath, Rect? area) async {
     final originalFile = File(srcFilePath);
 
-    /*final sampledFile = await ImageCrop.sampleImage(
-      file: widget.image,
-      preferredSize: (2000 / scale).round(),
-    );*/
+    final sampledFile = await ImageCrop.sampleImage(
+      file: originalFile,
+      preferredSize: 1280,
+    );
 
     if (area != null) {
-      final croppedFile = await ImageCrop.cropImage(file: originalFile, area: area);
+      final croppedFile = await ImageCrop.cropImage(file: sampledFile, area: area);
       return croppedFile;
     } else {
       return originalFile;

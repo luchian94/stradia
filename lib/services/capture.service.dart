@@ -55,13 +55,10 @@ class CaptureService with ReactiveServiceMixin {
 
     String base64Image;
     if (captureArea != null) {
-      var croppedImage =
-          await ImageProcessor.cropByArea(imagePath, captureArea);
-      base64Image = await ImageProcessor.getBase64ResizedImage(
-          croppedImage.path, _imgWidth, _imgHeight);
+      var croppedImage = await ImageProcessor.cropByArea(imagePath, captureArea);
+      base64Image = await ImageProcessor.getBase64ResizedImage(croppedImage.path, _imgWidth, _imgHeight);
     } else {
-      base64Image = await ImageProcessor.getBase64ResizedImage(
-          imagePath, _imgWidth, _imgHeight);
+      base64Image = await ImageProcessor.getBase64ResizedImage(imagePath, _imgWidth, _imgHeight);
     }
 
     Capture capture = Capture(
@@ -96,10 +93,6 @@ class CaptureService with ReactiveServiceMixin {
     Location location = new Location();
 
     await location.changeSettings(interval: 100, accuracy: LocationAccuracy.navigation);
-    /*var serviceEnabled = await location.serviceEnabled();
-    var permission = await location.hasPermission();
-    print(serviceEnabled);
-    print(permission);*/
     _locationListener = location.onLocationChanged.listen((LocationData currentLocation) {
       _currentLocation.value = currentLocation;
     });
@@ -107,6 +100,7 @@ class CaptureService with ReactiveServiceMixin {
 
   reset() {
     _captureCount.value = 0;
+    captureArea = null;
   }
 
   _checkFailedCaptures() {
