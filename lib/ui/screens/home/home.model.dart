@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ai_way/locator.dart';
+import 'package:ai_way/services/capture.service.dart';
+import 'package:ai_way/services/shared-prefs.service.dart';
+import 'package:ai_way/utils/image-utils.dart';
 import 'package:camera/camera.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/locator.dart';
-import 'package:stradia/services/capture.service.dart';
-import 'package:stradia/services/shared-prefs.service.dart';
-import 'package:stradia/utils/image-utils.dart';
 import 'package:uuid/uuid.dart';
 
 enum CaptureStatus {
@@ -48,7 +48,7 @@ class HomeModel extends ReactiveViewModel {
 
     cameraController = CameraController(
       mainCamera,
-      ResolutionPreset.veryHigh,
+      ResolutionPreset.high,
       enableAudio: false
     );
 

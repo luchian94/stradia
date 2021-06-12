@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/ui/screens/home/home-body-portrait.dart';
-import 'package:stradia/ui/screens/home/home.model.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../settings/settings.screen.dart';
 import 'home-body-landscape.dart';
+import 'home-body-portrait.dart';
+import 'home.model.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('STRADIA'),
+          title: Text('AI WAY'),
           centerTitle: true,
           actions: [
             Padding(

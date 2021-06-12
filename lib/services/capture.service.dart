@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:ai_way/constants/constants.dart';
+import 'package:ai_way/models/capture.model.dart';
+import 'package:ai_way/utils/image-utils.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/constants/constants.dart';
-import 'package:stradia/models/capture.model.dart';
 import 'package:http/http.dart' as http;
-import 'package:stradia/services/shared-prefs.service.dart';
-import 'package:stradia/utils/image-utils.dart';
 
 import '../locator.dart';
+import 'shared-prefs.service.dart';
 
 class CaptureService with ReactiveServiceMixin {
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/ui/screens/settings/settings.model.dart';
-import 'package:stradia/ui/screens/settings/settings_body.dart';
+
+import 'settings.model.dart';
+import 'settings_body.dart';
 
 class SettingsScreen extends StatelessWidget {
   SettingsScreen({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
-              title: Text('STRADIA - SETTINGS'),
+              title: Text('SETTINGS'),
               centerTitle: true,
               automaticallyImplyLeading: true,
               actions: [

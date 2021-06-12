@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/ui/screens/home/home.model.dart';
+
+import 'home.model.dart';
 
 class HomeSummary extends ViewModelWidget<HomeModel> {
   HomeSummary({Key? key}) : super(key: key);

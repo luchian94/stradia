@@ -1,6 +1,6 @@
+import 'package:ai_way/locator.dart';
+import 'package:ai_way/services/shared-prefs.service.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/locator.dart';
-import 'package:stradia/services/shared-prefs.service.dart';
 
 class SettingsModel extends BaseViewModel{
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();

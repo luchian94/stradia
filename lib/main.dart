@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stradia/ui/screens/home/home.screen.dart';
 
 import 'locator.dart';
+import 'ui/screens/home/home.screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

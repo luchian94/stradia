@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:stradia/ui/screens/settings/settings.model.dart';
+
+import 'settings.model.dart';
 
 class SettingsBody extends HookViewModelWidget<SettingsModel> {
   SettingsBody({Key? key}) : super(key: key);

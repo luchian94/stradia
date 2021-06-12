@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:ai_way/locator.dart';
+import 'package:ai_way/services/capture.service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_crop/image_crop.dart';
-import 'package:stradia/locator.dart';
-import 'package:stradia/services/capture.service.dart';
 
 class CropImageScreen extends StatefulWidget {
   final File image;

@@ -1,8 +1,9 @@
+import 'package:ai_way/ui/screens/crop-image/crop-image.screen.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stradia/ui/screens/crop-image/crop-image.screen.dart';
-import 'package:stradia/ui/screens/home/home.model.dart';
+
+import 'home.model.dart';
 
 class CameraHomePreview extends ViewModelWidget<HomeModel> {
   CameraHomePreview({Key? key}) : super(key: key);

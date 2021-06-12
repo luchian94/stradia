@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:ai_way/constants/constants.dart';
 import 'package:device_info/device_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stradia/constants/constants.dart';
 
 class SharedPrefsService {
 
