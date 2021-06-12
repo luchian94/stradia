@@ -17,7 +17,10 @@ class CameraHomePreviewPortrait extends ViewModelWidget<HomeModel> {
     return Column(
       children: [
         Expanded(
-          child: Center(child: CameraPreview(model.cameraController)),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: Center(child: CameraPreview(model.cameraController)),
+          ),
         ),
         if (model.capturingImageForCrop) CircularProgressIndicator(),
         if (!model.capturingImageForCrop && model.captureStatus == CaptureStatus.Setup)

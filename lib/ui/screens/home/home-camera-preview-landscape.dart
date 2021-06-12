@@ -21,28 +21,37 @@ class CameraHomePreviewLandscape extends ViewModelWidget<HomeModel> {
         ),
         if (model.capturingImageForCrop) CircularProgressIndicator(),
         if (!model.capturingImageForCrop && model.captureStatus == CaptureStatus.Setup)
-          ElevatedButton(
-            onPressed: () async {
-              var picture = await model.getPictureFoCrop();
-              if (picture != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CropImageScreen(image: picture),
+          Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      var picture = await model.getPictureFoCrop();
+                      if (picture != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CropImageScreen(image: picture),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orangeAccent,
+                      textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.crop),
+                      ],
+                    ),
                   ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.orangeAccent,
-              textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.crop),
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
       ],
     );
