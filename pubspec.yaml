@@ -1,5 +1,5 @@
-name: stradia
-description: A new Flutter project.
+name: ai_way
+description: App for capturing road images
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -28,7 +28,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-
   stacked: ^2.1.8
   shared_preferences: ^2.0.6
   stacked_hooks: ^0.2.1
@@ -56,7 +55,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/icon.jpg"
+  image_path: "assets/icon/icon.jpeg"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
