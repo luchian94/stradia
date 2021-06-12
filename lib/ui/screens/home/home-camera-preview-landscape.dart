@@ -5,8 +5,8 @@ import 'package:stacked/stacked.dart';
 
 import 'home.model.dart';
 
-class CameraHomePreview extends ViewModelWidget<HomeModel> {
-  CameraHomePreview({Key? key}) : super(key: key);
+class CameraHomePreviewLandscape extends ViewModelWidget<HomeModel> {
+  CameraHomePreviewLandscape({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, HomeModel model) {
@@ -14,15 +14,13 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
       return Container();
     }
 
-    return Column(
+    return Row(
       children: [
-        Expanded(child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
+        Expanded(
           child: Center(child: CameraPreview(model.cameraController)),
-        )),
+        ),
         if (model.capturingImageForCrop) CircularProgressIndicator(),
-        if (!model.capturingImageForCrop &&
-            model.captureStatus == CaptureStatus.Setup)
+        if (!model.capturingImageForCrop && model.captureStatus == CaptureStatus.Setup)
           ElevatedButton(
             onPressed: () async {
               var picture = await model.getPictureFoCrop();
@@ -42,7 +40,6 @@ class CameraHomePreview extends ViewModelWidget<HomeModel> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Seleziona l\'area  '),
                 Icon(Icons.crop),
               ],
             ),

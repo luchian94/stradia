@@ -60,8 +60,7 @@ class HomeControls extends ViewModelWidget<HomeModel> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('NUOVA SESSIONE'),
-                Icon(Icons.add_box, size: 30.0,),
+                Icon(Icons.add, size: 32.0,),
               ],
             ),
           ),

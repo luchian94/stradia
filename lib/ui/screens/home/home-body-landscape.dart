@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import 'capture-counter.dart';
-import 'home-camera-preview.dart';
+import 'home-camera-preview-landscape.dart';
 import 'home-controls.dart';
 import 'home-gps-speed.dart';
 import 'home-gps-verify.dart';
@@ -26,7 +26,8 @@ class HomeBodyLandscape extends ViewModelWidget<HomeModel> {
           Expanded(
             child: Row(
               children: [
-                Expanded(
+                Flexible(
+                  flex: 2,
                   child: Material(
                     elevation: 6.0,
                     child: Padding(
@@ -35,8 +36,7 @@ class HomeBodyLandscape extends ViewModelWidget<HomeModel> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (model.captureStatus ==
-                                  CaptureStatus.Capturing ||
+                          if (model.captureStatus == CaptureStatus.Capturing ||
                               model.captureStatus == CaptureStatus.Setup)
                             HomeCapturedCounter(),
                           HomeSummary(),
@@ -46,25 +46,25 @@ class HomeBodyLandscape extends ViewModelWidget<HomeModel> {
                     ),
                   ),
                 ),
-                if(model.captureStatus == CaptureStatus.Setup || model.captureStatus == CaptureStatus.Capturing)
-                  Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Material(
-                      elevation: 6.0,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 12.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(child: CameraHomePreview()),
-                          ],
+                if (model.captureStatus == CaptureStatus.Setup || model.captureStatus == CaptureStatus.Capturing)
+                  Flexible(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Material(
+                        elevation: 6.0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(child: CameraHomePreviewLandscape()),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
+                  )
               ],
             ),
           ),

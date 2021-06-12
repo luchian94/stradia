@@ -16,6 +16,7 @@ class HomeCapturedCounter extends ViewModelWidget<HomeModel> {
         children: [
           Text(
             'Immagini catturate: $count',
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headline4,
           ),
           Padding(

@@ -20,7 +20,7 @@ class HomeSummary extends ViewModelWidget<HomeModel> {
     }
     if (model.captureStatus == CaptureStatus.Idle) {
       return Text(
-        "Inizia una nuova sessione",
+        "Premi + per iniziare una nuova sessione",
         style: Theme.of(context).textTheme.headline5,
         textAlign: TextAlign.center,
       );
