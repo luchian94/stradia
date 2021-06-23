@@ -5,6 +5,7 @@ import 'package:ai_way/models/capture.model.dart';
 import 'package:ai_way/utils/image-utils.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,16 +21,21 @@ class CaptureService with ReactiveServiceMixin {
 
   List<Capture> _failedCaptures = [];
 
-  late Timer _failedCapturesTimer;
+  Timer? _failedCapturesTimer;
   StreamSubscription<LocationData>? _locationListener;
 
   Rect? captureArea;
 
   CaptureService() {
-    _failedCapturesTimer = Timer.periodic(
-        Duration(seconds: 1), (Timer t) => _checkFailedCaptures());
-    listenToReactiveValues(
-        [_captureCount, _failedCapturesCount, _currentLocation]);
+    if (_failedCapturesTimer != null) {
+      _failedCapturesTimer!.cancel();
+    }
+    _failedCapturesTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _checkFailedCaptures());
+    listenToReactiveValues([_captureCount, _failedCapturesCount, _currentLocation]);
+
+    /*accelerometerEvents.listen((AccelerometerEvent event) {
+      print(event);
+    });*/
   }
 
   ReactiveValue<int> _captureCount = ReactiveValue<int>(0);

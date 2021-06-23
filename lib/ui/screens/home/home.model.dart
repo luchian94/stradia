@@ -67,6 +67,9 @@ class HomeModel extends ReactiveViewModel {
   }
 
   void startSession() async {
+    if (_captureTimer != null) {
+      _captureTimer!.cancel();
+    }
     _sessionId = _generateSessionId();
 
     int captureInterval = await _sharedPrefsService.getIntervalCapture();
