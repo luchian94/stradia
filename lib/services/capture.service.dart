@@ -106,6 +106,7 @@ class CaptureService with ReactiveServiceMixin {
     cancelLocationSubscription();
 
     _positionStream = Geolocator.getPositionStream(
+      forceAndroidLocationManager: true,
       desiredAccuracy: LocationAccuracy.bestForNavigation,
     ).listen((Position position) {
       _currentPosition.value = position;
