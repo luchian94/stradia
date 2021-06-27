@@ -33,13 +33,14 @@ dependencies:
   shared_preferences: ^2.0.6
   stacked_hooks: ^0.2.1
   device_info: ^2.0.2
-  location: ^4.2.3
+  geolocator: ^7.2.0+1
+  location: ^4.3.0
   sensors_plus: ^1.0.2
   http: ^0.13.3
   uuid: ^3.0.4
   image: ^3.0.2
   exif: ^3.0.0
-  image_cropper: ^1.4.0
+  image_cropper: ^1.4.1
   image_crop: ^0.4.0
   wakelock: ^0.5.2
   # camera: ^0.8.1+3

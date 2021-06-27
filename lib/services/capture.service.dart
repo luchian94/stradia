@@ -4,8 +4,8 @@ import 'package:ai_way/constants/constants.dart';
 import 'package:ai_way/models/capture.model.dart';
 import 'package:ai_way/utils/image-utils.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
-import 'package:sensors_plus/sensors_plus.dart';
+import 'package:geolocator/geolocator.dart';
+// import 'package:sensors_plus/sensors_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,7 +22,7 @@ class CaptureService with ReactiveServiceMixin {
   List<Capture> _failedCaptures = [];
 
   Timer? _failedCapturesTimer;
-  StreamSubscription<LocationData>? _locationListener;
+  StreamSubscription<Position>? _positionStream;
 
   Rect? captureArea;
 
@@ -31,7 +31,7 @@ class CaptureService with ReactiveServiceMixin {
       _failedCapturesTimer!.cancel();
     }
     _failedCapturesTimer = Timer.periodic(Duration(seconds: 1), (Timer t) => _checkFailedCaptures());
-    listenToReactiveValues([_captureCount, _failedCapturesCount, _currentLocation]);
+    listenToReactiveValues([_captureCount, _failedCapturesCount, _currentPosition]);
 
     /*accelerometerEvents.listen((AccelerometerEvent event) {
       print(event);
@@ -40,20 +40,28 @@ class CaptureService with ReactiveServiceMixin {
 
   ReactiveValue<int> _captureCount = ReactiveValue<int>(0);
   ReactiveValue<int> _failedCapturesCount = ReactiveValue<int>(0);
-  ReactiveValue<LocationData?> _currentLocation = ReactiveValue<LocationData?>(null);
+  ReactiveValue<Position?> _currentPosition = ReactiveValue<Position?>(null);
 
   int get captureCount => _captureCount.value;
 
   int get failedCapturesCount => _failedCapturesCount.value;
 
-  LocationData? get currentLocation => _currentLocation.value;
+  Position? get currentLocation => _currentPosition.value;
 
-  double? get currentSpeed =>
-      _currentLocation.value != null && _currentLocation.value!.speed != null
-          ? _currentLocation.value!.speed! * 3.6
-          : null;
+  double? get currentSpeed => _currentPosition.value != null ? _currentPosition.value!.speed * 3.6 : null;
 
   capture(String? sessionId, String imagePath) async {
+    /*Position? capturePosition;
+    try {
+      capturePosition = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.bestForNavigation);
+    } catch (e) {
+      capturePosition = null;
+    }
+
+    if (capturePosition != null && capturePosition.speed * 3.6 < 5.0) {
+      return;
+    }*/
+
     DateTime now = DateTime.now();
     String currentFormattedDate = now.toIso8601String();
 
@@ -70,9 +78,9 @@ class CaptureService with ReactiveServiceMixin {
     Capture capture = Capture(
       deviceId,
       sessionId != null ? sessionId : "",
-      _currentLocation.value != null ? _currentLocation.value!.latitude : 0.0,
-      _currentLocation.value != null ? _currentLocation.value!.longitude : 0.0,
-      _currentLocation.value != null ? _currentLocation.value!.heading : 0.0,
+      _currentPosition.value != null ? _currentPosition.value!.latitude : 0.0,
+      _currentPosition.value != null ? _currentPosition.value!.longitude : 0.0,
+      _currentPosition.value != null ? _currentPosition.value!.heading : 0.0,
       currentFormattedDate,
       base64Image,
     );
@@ -96,11 +104,13 @@ class CaptureService with ReactiveServiceMixin {
 
   listenToLocationChange() async {
     cancelLocationSubscription();
-    Location location = new Location();
 
-    await location.changeSettings(interval: 100, accuracy: LocationAccuracy.navigation);
-    _locationListener = location.onLocationChanged.listen((LocationData currentLocation) {
-      _currentLocation.value = currentLocation;
+    _positionStream = Geolocator.getPositionStream(
+      desiredAccuracy: LocationAccuracy.bestForNavigation,
+    ).listen((Position position) {
+      _currentPosition.value = position;
+    }, onError: (_) {
+      _currentPosition.value = null;
     });
   }
 
@@ -124,10 +134,10 @@ class CaptureService with ReactiveServiceMixin {
   }
 
   cancelLocationSubscription() {
-    if (_locationListener != null) {
-      _locationListener!.cancel();
-      _locationListener = null;
-      _currentLocation.value = null;
+    if (_positionStream != null) {
+      _positionStream!.cancel();
+      _positionStream = null;
+      _currentPosition.value = null;
     }
   }
 }
