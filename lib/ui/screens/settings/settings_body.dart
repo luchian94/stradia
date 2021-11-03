@@ -40,7 +40,7 @@ class SettingsBody extends HookViewModelWidget<SettingsModel> {
             onChanged: (value) => model.captureApiUrl = value,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
-              labelText: "API URL",
+              labelText: "Capture Endpoint",
               hintText: "Inserisci endpoint per il salvataggio delle foto",
             ),
             validator: (value) {
