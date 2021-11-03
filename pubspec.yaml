@@ -36,7 +36,7 @@ dependencies:
   geolocator: ^7.2.0+1
   location: ^4.3.0
   sensors_plus: ^1.0.2
-  http: ^0.13.3
+  dio: ^4.0.1
   uuid: ^3.0.4
   image: ^3.0.2
   exif: ^3.0.0

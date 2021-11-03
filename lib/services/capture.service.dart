@@ -1,20 +1,22 @@
 import 'dart:async';
 
-import 'package:ai_way/constants/constants.dart';
+import 'package:ai_way/core/dio_client.dart';
 import 'package:ai_way/models/capture.model.dart';
 import 'package:ai_way/utils/image-utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:sensors_plus/sensors_plus.dart';
 import 'package:stacked/stacked.dart';
-import 'package:http/http.dart' as http;
 
 import '../locator.dart';
 import 'shared-prefs.service.dart';
 
 class CaptureService with ReactiveServiceMixin {
   SharedPrefsService _sharedPrefsService = locator<SharedPrefsService>();
-  String _baseApiUrl = Constants.baseApiUrl;
+
+  late Dio _dioClient;
+  late String _deviceId;
 
   final int _imgWidth = 600;
   final int _imgHeight = 600;
@@ -50,7 +52,13 @@ class CaptureService with ReactiveServiceMixin {
 
   double? get currentSpeed => _currentPosition.value != null ? _currentPosition.value!.speed * 3.6 : null;
 
-  capture(String? sessionId, String imagePath) async {
+  Future<void> setup() async {
+    _deviceId = await _sharedPrefsService.getDeviceId();
+    String captureApiUrl = await _sharedPrefsService.getCaptureApiUrl();
+    _dioClient = DioClient.getInstance(captureApiUrl);
+  }
+
+  Future<void> capture(String? sessionId, String imagePath) async {
     /*Position? capturePosition;
     try {
       capturePosition = await Geolocator.getCurrentPosition(forceAndroidLocationManager: true, desiredAccuracy: LocationAccuracy.bestForNavigation);
@@ -65,8 +73,6 @@ class CaptureService with ReactiveServiceMixin {
     DateTime now = DateTime.now();
     String currentFormattedDate = now.toIso8601String();
 
-    String deviceId = await _sharedPrefsService.getDeviceId();
-
     String base64Image;
     if (captureArea != null) {
       var croppedImage = await ImageProcessor.cropByArea(imagePath, captureArea);
@@ -76,7 +82,7 @@ class CaptureService with ReactiveServiceMixin {
     }
 
     Capture capture = Capture(
-      deviceId,
+      _deviceId,
       sessionId != null ? sessionId : "",
       _currentPosition.value != null ? _currentPosition.value!.latitude : 0.0,
       _currentPosition.value != null ? _currentPosition.value!.longitude : 0.0,
@@ -86,10 +92,7 @@ class CaptureService with ReactiveServiceMixin {
     );
 
     try {
-      var url = Uri.parse('$_baseApiUrl/api/v1/image');
-      var response = await http.post(url, body: capture.toJson());
-      // print('Response status: ${response.statusCode}');
-      // print('Response body: ${response.body}');
+      var response = await _dioClient.post('/api/v1/image', data: capture.toJson());
       if (response.statusCode == 201) {
         _captureCount.value++;
       } else {
@@ -123,8 +126,7 @@ class CaptureService with ReactiveServiceMixin {
   _checkFailedCaptures() {
     if (_failedCaptures.length > 0) {
       var firstCapture = _failedCaptures[0];
-      var url = Uri.parse('$_baseApiUrl/api/v1/image');
-      http.post(url, body: firstCapture.toJson()).then((response) {
+      _dioClient.post('/api/v1/image', data: firstCapture.toJson()).then((response) {
         if (response.statusCode == 201) {
           _failedCaptures.removeAt(0);
           _captureCount.value++;

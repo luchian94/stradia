@@ -6,6 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsService {
 
+  Future<String> getCaptureApiUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? prefsApiUrl = prefs.getString(Constants.prefsCaptureApiUrlKey);
+    return prefsApiUrl != null ? prefsApiUrl : 'https://zstag-rdd-api.azurewebsites.net';
+  }
+
   Future<String> getDeviceId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -22,6 +29,11 @@ class SharedPrefsService {
 
     int? prefsCaptureInterval = prefs.getInt(Constants.prefsCaptureIntervalKey);
     return prefsCaptureInterval != null ? prefsCaptureInterval : 5000;
+  }
+
+  Future<void> setCaptureApiUrl(String apiUrl) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(Constants.prefsCaptureApiUrlKey, apiUrl);
   }
 
   Future<void> setDeviceId(String deviceId) async {

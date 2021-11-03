@@ -61,6 +61,7 @@ class HomeModel extends ReactiveViewModel {
     showSummary = false;
     captureStatus = CaptureStatus.Setup;
     setBusy(true);
+    await _captureService.setup();
     await checkGpsServiceAndPermission();
     await setupCamera();
     setBusy(false);

@@ -12,11 +12,13 @@ class SettingsBody extends HookViewModelWidget<SettingsModel> {
   Widget buildViewModelWidget(BuildContext context, SettingsModel model) {
     var captureInterval = useTextEditingController();
     var deviceId = useTextEditingController();
+    var captureApiUrl = useTextEditingController();
 
     if (model.showSettings != true) {
       return Center(child: CircularProgressIndicator());
     }
 
+    captureApiUrl.text = model.captureApiUrl;
     deviceId.text = model.deviceId;
     captureInterval.text = model.captureInterval.toString();
 
@@ -32,6 +34,22 @@ class SettingsBody extends HookViewModelWidget<SettingsModel> {
               labelText: "Device ID",
               hintText: "Inserisci id del dispositivo",
             ),
+          ),
+          TextFormField(
+            controller: captureApiUrl,
+            onChanged: (value) => model.captureApiUrl = value,
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              labelText: "API URL",
+              hintText: "Inserisci endpoint per il salvataggio delle foto",
+            ),
+            validator: (value) {
+              bool _validURL = Uri.parse(value ?? '').isAbsolute;
+              if (!_validURL) {
+                return 'Please enter a valid URL';
+              }
+              return null;
+            },
           ),
           TextFormField(
             controller: captureInterval,
